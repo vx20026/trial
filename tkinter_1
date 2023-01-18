@@ -1,0 +1,30 @@
+import tkinter as tk
+import keyboard
+import webbrowser
+import threading
+class myGUI:
+    def __init__(self):
+        self.thread_running = bool
+        self.win = tk.Tk()
+        self.win.title("Copy Tool")
+        self.win.geometry('300x50')
+        tk.Button(self.win, text="Enable Copy", command=self.start_thread).pack()
+        tk.Button(self.win, text="Stop", command=self.close_thread).pack()
+    def copy_(self):
+        while self.thread_running:
+            
+            if keyboard.read_key()== "ctrl" and keyboard.read_key()== "c":
+                text_fromcopy=self.win.clipboard_get()
+                print(text_fromcopy)
+                if "&" in text_fromcopy:
+                    text_fromcopy = text_fromcopy.replace("&", "%26")
+                url = "https://www.google.com/search?q={}".format(text_fromcopy)
+                webbrowser.open(url,new=0)
+    def close_thread(self):
+        self.thread_running = False
+    def start_thread(self):
+        self.thread_running = True
+        threading.Thread(target=self.copy_).start()
+if __name__ == '__main__':
+    app = myGUI()
+    app.win.mainloop()
